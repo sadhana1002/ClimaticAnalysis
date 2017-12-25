@@ -10,17 +10,23 @@ Available Routes:
 General data:
 
 /api/v1.0/precipitation
+
 /api/v1.0/stations
+
 /api/v1.0/tobs
 
 Specific trip data:
 
 /api/v1.0/trip/"startdate as mm-dd"
+
 /api/v1.0/trip/"startdate as mm-dd"/"enddate as mm-dd"
 
 Visualizations:
 
 /api/v1.0/viz/tobs
+
 /api/v1.0/viz/precipitation
+
 /api/v1.0/viz/trip_average
+
 /api/v1.0/viz/daily_normals
