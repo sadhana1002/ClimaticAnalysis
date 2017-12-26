@@ -12,16 +12,16 @@ def currentday():
 @app.route("/")
 def home():
     return (
-        f"Welcome to the Hawaiian Climate API!<br/><br/>"
-        f"Available Routes:<br/><br/>"
-        f"General data:<br/><br/>"
+        f"<bold>Welcome to the Hawaiian Climate API!<br/><br/></bold>"
+        f"<bold>Available Routes:<br/><br/></bold>"
+        f"<bold>General data:<br/><br/></bold>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/><br/>"
-        f"Specific trip data:<br/><br/>"
+        f"<bold>Specific trip data:<br/><br/></bold>"
         f"/api/v1.0/trip/\"startdate as mm-dd\"<br/>"
         f"/api/v1.0/trip/\"startdate as mm-dd\"/\"enddate as mm-dd\"<br/><br/>"
-        f"Visualizations:<br/><br/>"
+        f"<bold>Visualizations:<br/><br/></bold>"
         f"/api/v1.0/viz/tobs<br/>"
         f"/api/v1.0/viz/precipitation<br/>"
         f"/api/v1.0/viz/trip_average<br/>"
