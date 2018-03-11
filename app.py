@@ -20,13 +20,8 @@ def home():
         f"/api/v1.0/tobs<br/><br/>"
         f"<bold>Specific trip data:<br/><br/></bold>"
         f"/api/v1.0/trip/\"startdate as mm-dd\"<br/>"
-        f"/api/v1.0/trip/\"startdate as mm-dd\"/\"enddate as mm-dd\"<br/><br/>"
-        f"<bold>Visualizations:<br/><br/></bold>"
-        f"/api/v1.0/viz/tobs<br/>"
-        f"/api/v1.0/viz/precipitation<br/>"
-        f"/api/v1.0/viz/trip_average<br/>"
-        f"/api/v1.0/viz/daily_normals<br/>"
-    )
+        f"/api/v1.0/trip/\"startdate as mm-dd\"/\"enddate as mm-dd\"<br/><br/>" 
+        )
     
 @app.route("/api/v1.0/precipitation")
 def getprecipitationinfo():
@@ -37,7 +32,7 @@ def getprecipitationinfo():
 
 @app.route("/api/v1.0/stations")
 def getstationsinfo():
-    stations_df = helper.getallstations()
+    stations_df = helper.getstationslist()
     station_list = stations_df.to_dict()
     result = jsonify(station_list)
     return result
@@ -56,17 +51,6 @@ def gettripprediction(start,end=currentday()):
     dailynormals_list = dailynormals_df.to_dict(orient='index')
     result = jsonify(dailynormals_list)
     return result
-
-@app.route("/api/v1.0/viz/<feature>")
-def visual_temperature(feature):
-    if(feature == 'tobs'):
-        return send_file('figures/TemperatureAnalysis_Hawaii.png',mimetype='image/png')
-    elif(feature == 'precipitation'):
-        return send_file('figures/PrecipitationAnalysis_Hawaii.png',mimetype='image/png')
-    elif(feature == 'trip_average'):
-        return send_file('figures/Tripavg.png',mimetype='image/png')
-    elif(feature == 'daily_normals'):
-        return send_file('figures/trip_dailynormals.png',mimetype='image/png')
 
 if __name__ == "__main__":
     app.run(debug=True)

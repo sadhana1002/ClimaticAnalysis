@@ -5,7 +5,7 @@
 
 # Performing climatic analysis of Hawaii based on the temperature recorded on different stations
 
-# In[8]:
+# In[1]:
 
 
 # Python SQL toolkit and Object Relational Mapper
@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 import pandas as pd
 from sqlalchemy import Column, Integer, String, Numeric, Text, Float,Table,ForeignKey
+from flask import jsonify
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -25,7 +26,7 @@ import matplotlib
 from datetime import datetime,timedelta
 
 
-# In[16]:
+# In[2]:
 
 
 engine = create_engine("sqlite:///hawaii.sqlite")
@@ -45,7 +46,7 @@ my_table = Table('Measurements', Base.metadata,
 
 # # Precipitation analysis
 
-# In[17]:
+# In[3]:
 
 
 def precipitation_data():
@@ -68,7 +69,7 @@ def precipitation_data():
     return measurements_df
 
 
-# In[19]:
+# In[4]:
 
 
 def showprecipitation():
@@ -93,7 +94,7 @@ def showprecipitation():
 
 # # Station Analysis
 
-# In[20]:
+# In[5]:
 
 
 def gettotalstations():
@@ -101,7 +102,7 @@ def gettotalstations():
     print(f"Total number of stations: {total_stations}")
 
 
-# In[21]:
+# In[6]:
 
 
 def stations_wfrequency():
@@ -116,7 +117,7 @@ def stations_wfrequency():
     return active_station_df
 
 
-# In[22]:
+# In[7]:
 
 
 def getstationslist():
@@ -127,7 +128,7 @@ def getstationslist():
     return stations
 
 
-# In[55]:
+# In[8]:
 
 
 def getmostfreqstation():
@@ -141,7 +142,7 @@ def getmostfreqstation():
     return freq_station
 
 
-# In[56]:
+# In[9]:
 
 
 def get_temperature_obs():
@@ -166,11 +167,13 @@ def get_temperature_obs():
     
 
 
-# In[57]:
+# In[10]:
 
 
 def showtemperature():
     station_measures_df = get_temperature_obs()
+    
+    print(jsonify(station_measures_df))
 
     station_measures_df.plot(kind="hist",linewidth=4,figsize=(15,10))
 
@@ -191,7 +194,7 @@ def showtemperature():
 
 # # Trip analysis
 
-# In[58]:
+# In[11]:
 
 
 def calctemps(startdate,enddate):
@@ -210,19 +213,20 @@ def calctemps(startdate,enddate):
     xvals = range(len(barvalue))
     matplotlib.rcParams.update({'font.size': 12})
     
-    fig,ax = plt.subplots(figsize=(3,8))
+    fig,ax = plt.subplots(figsize=(5,10))
     ax.bar(xvals, barvalue, yerr=yerror, color='g',alpha=0.6)
     ax.set_xticks([1]) 
     plt.xlabel("Vacation time period")
     plt.ylabel("Temperature")
     plt.title("Trip average temperature")
+    plt.tight_layout()
     plt.savefig("figures\Tripavg.png")
     
     plt.show()
 
 
 
-# In[59]:
+# In[12]:
 
 
 def calcrainfall(startdate,enddate):
@@ -245,10 +249,11 @@ def query_to_dict(res):
         
 
 
-# In[60]:
+# In[14]:
 
 
 def dailynormals(startdate,enddate):
+    df = pd.DataFrame()
     compstart = datetime.strptime(startdate,"%m-%d") - timedelta(days=365)
     compend = datetime.strptime(enddate,"%m-%d") - timedelta(days=365)
     
@@ -256,6 +261,7 @@ def dailynormals(startdate,enddate):
     
     compend = compend.replace(year = 2017)
     
+    print(f"compstart-{compstart} : compend-{compend}")
     
     daily_temperatures = session.query(Measurements.date,label('tmax',func.max(Measurements.tobs)),                                      label('tmin',func.min(Measurements.tobs)),
                                       label('tavg',func.avg(Measurements.tobs)),).\
@@ -267,26 +273,17 @@ def dailynormals(startdate,enddate):
     
     print(f"dataframe columns - {df.columns}")
     
+    if('date' in df.columns):
+        df = df.set_index('date')
     
-    df = df.set_index('date')
-    df.plot(kind='area',stacked=False,figsize=(15,10),alpha=0.50,cmap = cm.get_cmap('Paired'))
-    plt.xlabel("Date")
-    plt.ylabel("Temperature")
-    plt.title(f"Trip - Daily Normals")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.savefig("figures/trip_dailynormals.png")
-    plt.show()
-
     return df
 
 
-# In[61]:
+# In[15]:
 
 
 def showdailynormals():
     dailynormals_df = dailynormals('01-01','01-10')
-	
     dailynormals_df.plot(kind='area',stacked=False,figsize=(15,10),alpha=0.50,cmap = cm.get_cmap('Paired'))
 
     plt.xlabel("Date")
@@ -299,7 +296,7 @@ def showdailynormals():
     plt.show()
 
 
-# In[65]:
+# In[16]:
 
 
 def performclimateanalysis():
@@ -313,5 +310,22 @@ def performclimateanalysis():
     showdailynormals()
     
     
+
+
+# In[17]:
+
+
+plt.show()
+
+
+# In[19]:
+
+
+temperatures_df = get_temperature_obs()
+temperatures_list = temperatures_df.to_dict()
+
+
+# In[20]:
+
 
 
