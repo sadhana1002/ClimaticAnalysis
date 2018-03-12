@@ -124,7 +124,7 @@ def getstationslist():
 
     stations = active_station_df[['name','station']]
 
-    return stations
+    return stations.to_dict(orient='records')
 
 
 # In[55]:
