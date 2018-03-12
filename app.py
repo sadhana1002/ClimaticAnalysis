@@ -33,8 +33,7 @@ def getprecipitationinfo():
 @app.route("/api/v1.0/stations")
 def getstationsinfo():
     stations_df = helper.getstationslist()
-    station_list = stations_df.to_dict()
-    result = jsonify(station_list)
+    result = jsonify(stations_df)
     return result
 
 @app.route("/api/v1.0/tobs")
